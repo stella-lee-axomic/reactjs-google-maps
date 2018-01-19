@@ -38,7 +38,7 @@ export default class App extends React.Component {
         ///////////////////////
 
 
-        // stackoverflow
+        // pin draggable + search
         var markers = [];
         var map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: -33.8688, lng: 151.2195},
@@ -83,18 +83,12 @@ export default class App extends React.Component {
                     position: place.geometry.location
                 });
                 // drag response
-                window.google.maps.event.addListener(marker, 'dragend', function (e) {
-                    // displayPosition(e.latLng);
-                   var lat=  e.latLng.lat();
-                    var lng=  e.latLng.lng();
-                    this.setState({
-                        lat: lat,
-                        lng: lng
-                    });
-                    console.log();
+                window.google.maps.event.addListener(marker, 'dragend', function () {
+                    displayPosition(this.getPosition());
+                    console.log(marker);
                 });
                 // click response
-                window.google.maps.event.addListener(marker, 'click', function (e) {
+                window.google.maps.event.addListener(marker, 'click', function () {
                     displayPosition(this.getPosition());
                 });
                 markers.push(marker);
@@ -103,21 +97,23 @@ export default class App extends React.Component {
                 //     title: marker.title
                 // });
                 console.log('place name:', marker.title);
+                console.log('place address', places);
             }
             map.fitBounds(bounds);
             map.setZoom(18);
         });
+     /////////////////
 
         window.google.maps.event.addListener(map, 'bounds_changed', function () {
             var bounds = map.getBounds();
             searchBox.setBounds(bounds);
         });
 
-        // displays a position on two <input> elements
+        ////////////// displays a position on two <input> elements
         function displayPosition(pos) {
             // this.refs.lat.value = pos.lat();
-            // document.getElementsByClassName('lat').value = pos.lat();
-            // document.getElementsByClassName('lng').value = pos.lng();
+            document.getElementsByClassName('lat').value = pos.lat();
+            document.getElementsByClassName('lng').value = pos.lng();
             // this.setState({
             //     lat: pos.lat(),
             //     lng: pos.lng()
