@@ -4,8 +4,8 @@ import './index.css';
 
 export default class App extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             zoom: 4,
             maptype: 'roadmap',
@@ -15,9 +15,8 @@ export default class App extends React.Component {
             lat: '',
             lng: ''
         };
-
+        // this.displayPosition = this.displayPosition.bind(this);
     }
-
 
     componentDidMount() {
 
@@ -36,7 +35,6 @@ export default class App extends React.Component {
         //     position: {lat: -33.8688, lng: 151.2195},
         // });
         ///////////////////////
-
 
         // pin draggable + search
         var markers = [];
@@ -58,6 +56,9 @@ export default class App extends React.Component {
         map.controls[window.google.maps.ControlPosition.TOP_CENTER].push(input);
         var searchBox = new window.google.maps.places.SearchBox(
             /** @type {HTMLInputElement} */(input));
+
+
+
         window.google.maps.event.addListener(searchBox, 'places_changed', function () {
             var places = searchBox.getPlaces();
             if (places.length === 0) return;
@@ -83,26 +84,26 @@ export default class App extends React.Component {
                     position: place.geometry.location
                 });
                 // drag response
-                window.google.maps.event.addListener(marker, 'dragend', function () {
+                window.google.maps.event.addListener(marker, 'dragend', function(){
                     displayPosition(this.getPosition());
-                    console.log(marker);
                 });
                 // click response
-                window.google.maps.event.addListener(marker, 'click', function () {
+                window.google.maps.event.addListener(marker, 'click', function(){
                     displayPosition(this.getPosition());
                 });
                 markers.push(marker);
                 bounds.extend(place.geometry.location);
                 // this.setState({
-                //     title: marker.title
-                // });
+                //     title: markers.title
+                // }).bind(this);
                 console.log('place name:', marker.title);
-                console.log('place address', places);
+                // address.push(places[0].formatted_address);
+                console.log('place address', places[0].formatted_address);
             }
             map.fitBounds(bounds);
             map.setZoom(18);
         });
-     /////////////////
+        /////////////////
 
         window.google.maps.event.addListener(map, 'bounds_changed', function () {
             var bounds = map.getBounds();
@@ -110,18 +111,32 @@ export default class App extends React.Component {
         });
 
         ////////////// displays a position on two <input> elements
-        function displayPosition(pos) {
+        function displayPosition (pos) {
             // this.refs.lat.value = pos.lat();
             document.getElementsByClassName('lat').value = pos.lat();
             document.getElementsByClassName('lng').value = pos.lng();
-            // this.setState({
-            //     lat: pos.lat(),
-            //     lng: pos.lng()
-            // });
-            // console.log(pos);
+            this.setState({
+                lat: pos.lat(),
+                lng: pos.lng()
+            })
+            console.log(pos);
             console.log('lat', pos.lat());
             console.log('lng', pos.lng());
         }
+
+
+       // displayPosition = (pos) => {
+       //      // this.refs.lat.value = pos.lat();
+       //      // document.getElementsByClassName('lat').value = pos.lat();
+       //      // document.getElementsByClassName('lng').value = pos.lng();
+       //      this.setState({
+       //          lat: pos.lat(),
+       //          lng: pos.lng()
+       //      });
+       //      // console.log(pos);
+       //      // console.log('lat', pos.lat());
+       //      // console.log('lng', pos.lng());
+       //  }
 
         // map.addListener('zoom_changed', () => { // double click
         //     this.setState({
@@ -241,9 +256,9 @@ export default class App extends React.Component {
                 </div>
 
                 {/*<div>location: { this.state.address} </div>*/}
-                <div>address: {this.state.title} </div>
-                <div ref='lat'>{this.state.lat}</div>
-                <div ref='lng'>{this.state.lng}</div>
+                <div>address: {} </div>
+                <div ref='lat'>lat: {this.state.lat}</div>
+                <div ref='lng'>lng: {this.state.maptype}</div>
 
                     <div id='map'>
                     </div>
